@@ -1,19 +1,21 @@
 import std/os
 from strformat import fmt
 
-var configFileName = getCurrentDir()&"/ecba_config.txt"
+var mainFile = getCurrentDir()&"/EcbaFile"
 var fileLines: array[0..666, string]
+var fileLineCount = 0
 
-proc readFileConentAndSeperate() =
-    let file = open(configFileName)
+proc readFileConentAndSeperate(file: string, setCountValue: bool = false): int =
+    if not fileExists(file):
+        echo "File not found: ", file
+        return 0
+    let file = open(file)
     defer: file.close()
     let fileContent = file.readAll()
     var text = ""
     var count = 0
     for k in fileContent:
-        #echo fmt"{k}"
-        #echo fmt"text =  '{text}'"
-        if fmt"{k}" == "\n":
+        if fmt"{k}" == "\n": # use fmt because k is char and con not compare with string
             fileLines[count] = text
             text = ""
             count += 1
@@ -21,6 +23,9 @@ proc readFileConentAndSeperate() =
             text &= k
     if text != "":
         fileLines[count] = text
+    if setCountValue:
+        fileLineCount = count
+    return count
 
-readFileConentAndSeperate()
+discard readFileConentAndSeperate(mainFile, true)
 echo fileLines[1]
