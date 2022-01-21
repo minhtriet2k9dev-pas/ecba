@@ -8,6 +8,8 @@ var fileLineCount = 0
 proc readFileConentAndSeperate(file: string, setCountValue: bool = false): int =
     if not fileExists(file):
         echo "File not found: ", file
+        echo "Please create the file and try again."
+
         return 0
     let file = open(file)
     defer: file.close()
